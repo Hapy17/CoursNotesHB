@@ -23,10 +23,29 @@ Il y a aussi des réponses du serveur vers le client.
 - status code (200, 404, 500): Le status code est le code de réponse du serveur.
 - headers : Les headers sont les informations envoyées par le serveur.
 - body : Le body est le contenu de la réponse.  
-
 ---
-Références :   
-[HTTP - Wikipédia](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol)  
-[Status codes HTTP - Wikipédia](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)  
-[Headers des requêtes HTTP - Wikipédia](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields)  
-[Headers de requêtes HTTP - MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)
+## Configuration d'accès au requêtes de l'API
+- Modifie le  fichier Entity et rajouter :
+    ```php
+    #[ApiRessource(
+        collectionOperations: ['GET'];
+        itemOperations: ['GET'];
+    )]
+    ```
+## Validation des données
+- Rajouter dans le fichier Entity :
+    ```php
+     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+        Assert\NotBlank([
+            message: "The date cannot be blank.",
+        ]),
+        Assert\LessThan([
+            value: new \DateTime('now'),
+            message: "The date cannot be in the past.",
+        ]),
+        Asser\GreaterThan([
+            value: '2008-01-01',
+            message: 'The date must be in the future',
+        ]),
+    ```
+---
