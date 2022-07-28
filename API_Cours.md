@@ -46,20 +46,26 @@
 
 - Coller dans le fichier config/package/security.yaml et remplacer le contenu de main par :
     ```yaml
-    main:
-        stateless: true
-        provider: app_user_provider
-        json_login:
-            check_path: /authentication_token
-            username_path: email
-            password_path: password
-            success_handler: lexik_jwt_authentication.handler.authentication_success
-            failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        jwt: ~
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        # Inserer le code en dessous
+        main:
+            stateless: true
+            provider: app_user_provider
+            json_login:
+                check_path: /authentication_token
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            jwt: ~
     ```
 
 - Remplacer le access_control dans le même fichier :
     ```yaml
+    # Inserer au même niveau d'indentation que firewall
     access_control:
         - { path: ^/api/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
@@ -68,6 +74,7 @@
 
 - Ajouter dans le fichier config/route.yaml :
     ```yaml
+    # Inserer au niveau de indentation 0
     authentication_token:
         path: /authentication_token
         methods: ['POST']
@@ -75,6 +82,7 @@
 
 - Modifier le fichier config/package/api_platform.yaml et fusionner les swagger :
     ```yaml
+    # Faites attention au niveau d'indentation
     swagger:
         versions: [3]
         api_keys:
@@ -178,6 +186,7 @@
 
 - Ajouter dans le fichier config/services.yaml : 
     ```yaml
+    # Inserer au même niveau d'indentation que App\ juste au dessus
         App\OpenApi\JwtDecorator:
             decorates: 'api_platform.openapi.factory'
             arguments: ['@.inner']
@@ -186,6 +195,7 @@
     - Création des roles  
         - Ajouter dans le fichier config/package/security.yaml avant firewall :
         ```yaml 
+        # Inserer au même niveau d'indentation que provider et firewall
            role_hierarchy:
             ROLE_ADMIN: ROLE_USER
             ROLE_SUPER_ADMIN: ROLE_USER
